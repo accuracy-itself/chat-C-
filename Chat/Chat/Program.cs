@@ -64,18 +64,9 @@ namespace Chat
         //delete member by address
         public static void DeleteAddress(string address)
         {
-            int i = 0;
-            foreach (ClientInfo addressInfo in AccessibleAddresses)
-            {
-                if (addressInfo.Address == address)
-                {
-                    AccessibleAddresses[i].Handler.Close();
-                    AccessibleAddresses.RemoveAt(i);
-                    return;
-                }
-
-                i++;
-            }
+            var addressInfo = AccessibleAddresses.Find(x => x.Address == address);
+            addressInfo.Handler.Close();
+            AccessibleAddresses.Remove(addressInfo);
         }
 
         //onlu for launch, saying others we're here
@@ -166,6 +157,7 @@ namespace Chat
                     catch {
                         sb.Append(GetName(remoteIpAddress) + " вышел из чата!!\n");
                         History.Append(DateTime.Now.ToShortTimeString() + ":: " + sb.ToString() + "\n");
+                        Console.WriteLine(sb.ToString());
 
                         DeleteAddress(remoteIpAddress);
                         break;
